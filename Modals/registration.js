@@ -24,7 +24,8 @@ const userSchema = new mongoose.Schema({
 
     },
     status:{
-        type:String
+        type:String,
+        default:"Inactive"
     },
     user_Id: {
         type: String,
@@ -265,6 +266,18 @@ const userSchema = new mongoose.Schema({
                     }],
 
 
+        },
+        joining_date:{
+            type:Date,
+            default:new Date()
+        },
+        Activation_date:{
+            type:Date,
+            default:null
+        },
+        profile_pic:{
+            type:String,
+            default:null
         }
     
 

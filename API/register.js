@@ -4,8 +4,12 @@ const userNameType = require('../Modals/userNameType')
 const passwordType = require('../Modals/passwordType')
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt")
-const { passwordStrength } = require('check-password-strength')
-
+const { passwordStrength } = require('check-password-strength');
+const { updateLevel } = require('./Update_Lavel_Team');
+const IncomeData = require('../Modals/IncomeData');
+const fs = require('fs');
+const { secrateKey } = require('../keys');
+// console.log(secrateKey())
 const register = async(req,res)=>{
     const bodyTest = req.body
     const velidUserName = await generateUserName(bodyTest?.user_Id)
@@ -27,8 +31,7 @@ const register = async(req,res)=>{
                                         name: bodyTest.name,
                                         email: bodyTest.email,
                                         phone: bodyTest.phone,
-                                        password: isStrongPassword,
-                                        status: "inactive",
+                                        password: await hashPassword(isStrongPassword),
                                         user_Id: velidUserName,
                                         sponsor_Id: bodyTest.sponsor_Id,
                                         level_upline:
@@ -62,21 +65,22 @@ const register = async(req,res)=>{
                                 )
                                 const accessToken = jwt.sign(
                                     { user_Id: user.user_Id },
-                                    "secretkeyappearsheregdsahgdahdcasdfdcasgdfdafsadf\dsasdajsdghf\dhashdga\sdfhfdj",
-                                    { expiresIn: "1h" }
+                                    secrateKey(),
+                                    { expiresIn: "10m" }
                                   )
                                 const result = await user.save()
-                                // const income = new IncomeData(
-                                //     {
-                                //         user_Id: result.user_Id,
-                                //         level_Income: [],
-                                //         total_level_Income: 0
-                                //     }
-                                // )
-                                // const income_Result = await income.save()
+                                const income = new IncomeData(
+                                    {
+                                        user_Id: result.user_Id,
+                                        level_Income: [],
+                                        total_level_Income: 0
+                                    }
+                                )
+                                const income_Result = await income.save()
                                 res.status(201).json({
                                     massage: 'registration success',
-                                    accessToken:accessToken,
+                                    accessToken,
+                                    password:isStrongPassword,
                                     result
                                 })
                                 updateLevel(result.user_Id)
@@ -126,13 +130,13 @@ const generateUserName = async (userName) => {
 const generatePassword = async (password) => {
     const password_structure = await passwordType.findOne()
     if (password_structure.structure === "auto") {
-        return hashPassword(generateString(6))
+        return generateString(6)
     } else if (password_structure.structure === "menual") {
         if (password_structure.passwordType === "basic") {
-            return hashPassword(password)
+            return password
         } else if (password_structure.passwordType === "strong") {
             if (password.length === 7) {
-                return hashPassword(password)
+                return password
             } else {
                 return false
             }
@@ -141,7 +145,7 @@ const generatePassword = async (password) => {
             console.log(isStrong)
             if (isStrong === "Strong") {
                 console.log(password)
-                return hashPassword(password)
+                return password
             } else {
                 console.log(false)
                 return false
@@ -149,31 +153,7 @@ const generatePassword = async (password) => {
         }
     }
 }
-const updateLevel = async (user_Id) => {
-    const new_userdata = await UserData.findOne({ user_Id })
-    let level_upline = new_userdata.level_upline
-    objectLenght = Object.keys(level_upline).length;
-    var k = 0;
-    for (let x in level_upline) {
-        var update = await UserData.findOne({ user_Id: level_upline[x] })
-        if (update !== null) {
-            const objKeys = Object.keys(update?.level_Team)[k]
-            console.log(`${objKeys} ${k}`)
-            const newTeamData = await update?.level_Team[objKeys].push({
-                name: new_userdata.name,
-                phone: new_userdata.phone,
-                status: new_userdata.status,
-                user_Id: new_userdata.user_Id,
-                sponsor_Id: new_userdata.sponsor_Id,
-            })
-            const upload_updated_data = await UserData.findOneAndUpdate({ user_Id: level_upline[x] }, update)
-        }
-        k++;
-        if (k === objectLenght) {
-            break;
-        }
-    }
-}
+
 const hashPassword = async (plaintextPassword) => {
     const hash = await bcrypt.hash(plaintextPassword, 10)
     return await hash

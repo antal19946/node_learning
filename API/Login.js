@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const UserData = require("../Modals/registration");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const { secrateKey } = require("../keys");
 const Login = async (req, res) => {
     const user_Id = req.body.user_Id
     const password = req.body.password
@@ -11,7 +12,7 @@ const Login = async (req, res) => {
         if (UserDetail && comparePassword) {
             const accessToken = jwt.sign(
                 { user_Id: UserDetail.user_Id },
-                "secretkeyappearsheregdsahgdahdcasdfdcasgdfdafsadf\dsasdajsdghf\dhashdga\sdfhfdj",
+                secrateKey(),
                 { expiresIn: "1h" }
               )
              res.json({accessToken,

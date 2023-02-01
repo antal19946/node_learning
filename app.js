@@ -5,6 +5,7 @@ const config = require('config')
 const port = config.get('server.port')
 const router = require('./routes/index')
 app.use(express.urlencoded({extended: false}))
+app.use(express.static(__dirname + '/uploads/'))
 const test = require('./API/passwordType')
 app.use(router)
 var bodyParser = require('body-parser'); 
@@ -14,8 +15,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(express.json())
 
-app.post('/test',(req,res)=>{
-    console.log(req.body)
-})
+// app.post('/',(req,res)=>{
+//     res.send("hello")
+// })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
