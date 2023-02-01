@@ -9,8 +9,8 @@ const { UpdateProfile } = require("../API/UpdateProfile");
 const { UpdatePassword } = require("../API/UpdatePassword");
 const { upload } = require("../API/UploadFile");
 const { getGeneration } = require("../API/GetGenerationTeam");
+const {getTeamDetails} = require("../API/getTeam");
 var router = express.Router();
-
 var jsonParser = bodyParser.json();
 router.use(jsonParser)
 router.get('/', (req, res) => {
@@ -29,5 +29,7 @@ router.get('/getProfile', getProfile)
 router.post('/updateProfile', upload, UpdateProfile)
 router.post('/updatepassword', UpdatePassword)
 router.get('/getGeneration', getGeneration)
+router.post('/testclass', getTeamDetails.getDirectTeam)
+
 
 module.exports = router;

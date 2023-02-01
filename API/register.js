@@ -1,13 +1,6 @@
-const UserData = require('../Modals/registration')
-const validator = require("email-validator")
-const userNameType = require('../Modals/userNameType')
-const passwordType = require('../Modals/passwordType')
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt")
-const { passwordStrength } = require('check-password-strength');
+const {express,validator,jwt,passwordStrength,bcrypt} = require('../config/npmRoutes')
+const {UserData,userNameType,passwordType,IncomeData} = require('../config/DBroutes')
 const { updateLevel } = require('./Update_Lavel_Team');
-const IncomeData = require('../Modals/IncomeData');
-const fs = require('fs');
 const { secrateKey } = require('../keys');
 // console.log(secrateKey())
 const register = async(req,res)=>{
