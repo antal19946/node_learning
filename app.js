@@ -6,14 +6,18 @@ const port = config.get('server.port')
 const router = require('./routes/index')
 app.use(express.urlencoded({extended: false}))
 app.use(express.static(__dirname + '/uploads/'))
-const test = require('./API/passwordType')
+const cors = require('cors')
+router.use(cors)
+// app.use(cors)
 app.use(router)
 var bodyParser = require('body-parser'); 
+// const { cors } = require('./config/npmRoutes')
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
 app.use(express.json())
+// app.use(cors)
 
 // app.post('/',(req,res)=>{
 //     res.send("hello")
