@@ -1,5 +1,5 @@
-const {express,validator,jwt,passwordStrength,bcrypt} = require('../config/npmRoutes')
-const {UserData,userNameType,passwordType,IncomeData} = require('../config/DBroutes')
+const {express,validator,jwt,passwordStrength,bcrypt} = require('../commons/common_Routes/npmRoutes')
+const {UserData,userNameType,passwordType,IncomeData} = require('../commons/common_Routes/DBroutes')
 const { updateLevel } = require('./Update_Lavel_Team');
 const { secrateKey } = require('../keys');
 class getTeam{

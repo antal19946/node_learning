@@ -1,5 +1,13 @@
-const {express,validator,jwt,passwordStrength,bcrypt} = require('../config/npmRoutes')
-const {UserData,userNameType,passwordType,IncomeData} = require('../config/DBroutes')
+const express = require('express');
+const validator = require("email-validator")
+const jwt = require("jsonwebtoken");
+const { passwordStrength } = require('check-password-strength');
+const bcrypt = require("bcrypt")
+const cors = require('cors')
+const IncomeData = require("../Modals/IncomeData")
+const passwordType = require("../Modals/passwordType")
+const UserData = require("../Modals/registration")
+const userNameType = require("../Modals/userNameType")
 const { updateLevel } = require('./Update_Lavel_Team');
 const { secrateKey } = require('../keys');
 // console.log(secrateKey())
@@ -71,14 +79,14 @@ const register = async(req,res)=>{
                                 )
                                 const income_Result = await income.save()
                                 res.status(201).json({
-                                    massage: 'registration success',
+                                    massage: true,
                                     accessToken,
                                     password:isStrongPassword,
                                     result
                                 })
                                 updateLevel(result.user_Id)
                             } else {
-                                res.status(400).json({ massage: 'sponsor id not exist' })
+                                res.status(400).json({ message: 'sponsor id not exist' })
                             }
                     } else {
                         res.status(400).json({ massage: 'please enter strongest password' })
