@@ -2,7 +2,10 @@ const UserData = require("../Modals/registration");
 const jwt = require("jsonwebtoken");
 const { secrateKey } = require("../keys");
 const bcrypt = require("bcrypt");
-
+const config = require('config')
+const mailerUserName = config.get('server.mailerUserName')
+const nodemailer = require("nodemailer");
+const mailerPassword = config.get('server.mailerPassword')
 const UpdatePassword = async(req,res)=>{
     const {password,newPassword} = req.body
     const Authorization_Token = await req.header('Authorization')
@@ -42,4 +45,28 @@ const UpdatePassword = async(req,res)=>{
       res.json("Failed to authenticate token.")
   }
 }
-module.exports ={UpdatePassword}
+
+class forgotPassword{
+  async sendOtp(req,res){
+    const {email} = req.body
+    let transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: mailerUserName, // generated ethereal user
+        pass: mailerPassword, // generated ethereal password
+      },
+    });
+    let info = await transporter.sendMail({
+      from: 'rajeevkumar001834@gmail.com', // sender address
+      to: email, // list of receivers
+      subject: "Hello ✔", // Subject line
+      text: "Hello world?", // plain text body
+      html: "<b>Hello world?</b>", // html body
+    });
+    res.send(info.messageId)
+  }
+}
+const {sendOtp}=new forgotPassword()
+module.exports ={UpdatePassword,sendOtp}

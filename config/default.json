@@ -2,6 +2,8 @@
     "server": {
       "host": "localhost",
       "port": 3000,
-      "dbName":"APIlearning"
+      "dbName":"APIlearning",
+      "mailerUserName":"queenie13@ethereal.email",
+      "mailerPassword":"r1zqmN6a5UvSnHE9Rk"
     }
   }

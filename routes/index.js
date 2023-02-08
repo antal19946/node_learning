@@ -5,12 +5,13 @@ const { SaveUserNameType, ChangeStatrWith, userNameMathod,getUserNameMethod } = 
 
 const { Login } = require("../API/Login");
 const { getProfile, UpdateProfile, register } = require("../API/Profile");
-const { UpdatePassword } = require("../API/UpdatePassword");
+const { UpdatePassword, sendOtp } = require("../API/UpdatePassword");
 const { upload } = require("../API/UploadFile");
 const { getGeneration } = require("../API/GetGenerationTeam");
 const { getTeamDetails } = require("../API/getTeam");
 const cors = require('cors');
 const { generateToken } = require("../commons/Authorization");
+const { save_bank_kyc } = require("../API/Kyc");
 
 var router = express.Router();
 var jsonParser = bodyParser.json();
@@ -51,7 +52,9 @@ router.post('/updateProfile', upload, UpdateProfile)
 router.post('/updatepassword', UpdatePassword)
 router.get('/getGeneration', getGeneration)
 router.post('/testclass', getTeamDetails.getDirectTeam)
-console.log(generateToken("123456"))
+router.post('/sendotp',sendOtp)
+router.post('/save_bank_kyc', upload, save_bank_kyc)
+// console.log(generateToken("123456"))
 //console.log(Authorization.verifyToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NzU0MDU4OTAsImV4cCI6MTY3NTQwOTQ5MH0.zMNYctijC2UM8-yDkfL1O2a0Y-8OhN_KupZFw484tJw"))
 
 

@@ -13,16 +13,16 @@ class Auth{
           )
 
     }
-    verifyToken(){
-     return jwt.verify(this.user_Id,secrateKey(), function (err, resp) {
+    verifyToken(auth){
+     return jwt.verify(auth,secrateKey(), function (err, resp) {
             if (err) {
-              return err
+              return{status:false, err}
             }else{
-                return resp
+                return {status:true, resp}
             }
         }
         )
     }
 }
-const {generateToken} = new Auth()
-module.exports = {generateToken}
+const {generateToken,verifyToken} = new Auth()
+module.exports = {generateToken,verifyToken}
